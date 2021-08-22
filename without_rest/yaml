@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<django-objects version="1.0">
+    <object model="employeeModel.student" pk="1">
+        <field name="roll_no" type="IntegerField">1530933</field>
+        <field name="name" type="CharField">Ankush</field>
+        <field name="address" type="CharField">Canada</field>
+        <field name="registration_no" type="IntegerField">2131</field>
+    </object>
+    <object model="employeeModel.student" pk="2">
+        <field name="roll_no" type="IntegerField">1530934</field>
+        <field name="name" type="CharField">Himansh</field>
+        <field name="address" type="CharField">Ontario</field>
+        <field name="registration_no" type="IntegerField">21432</field>
+    </object>
+    <object model="employeeModel.student" pk="3">
+        <field name="roll_no" type="IntegerField">1530935</field>
+        <field name="name" type="CharField">MJ</field>
+        <field name="address" type="CharField">Canada</field>
+        <field name="registration_no" type="IntegerField">23423</field>
+    </object>
+    <object model="employeeModel.student" pk="4">
+        <field name="roll_no" type="IntegerField">153010</field>
+        <field name="name" type="CharField">Amay</field>
+        <field name="address" type="CharField">India</field>
+        <field name="registration_no" type="IntegerField">6565</field>
+    </object>
+    <object model="employeeModel.student" pk="5">
+        <field name="roll_no" type="IntegerField">1530936</field>
+        <field name="name" type="CharField">Raman</field>
+        <field name="address" type="CharField">India</field>
+        <field name="registration_no" type="IntegerField">6547</field>
+    </object>
+</django-objects>
