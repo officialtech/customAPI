@@ -144,7 +144,10 @@ class StudentSerializePostView(HttpResponseMixin, View):
         delete student data ---> `/student-detail/<int:id>/`
 
     As you can see we used 3 `endpoints` but we must and should have to use one
-    -------------- SO LET'S DO IT --------------
+    
+    ---------------------------- SO LET'S DO IT ----------------------------
+
+    ----------------- for testing these, consider `test.py` -----------------
 """
 
 
@@ -199,12 +202,12 @@ class StudentApiView(HttpResponseMixin, SerializeMixin, View):
     """
     def post(self, request, *args, **kwargs):
         """
-        1. Getting student POST data `student_data`
-        2. check for vaild JSON `valid_json`
-        3. converting to python dictonary from JSON `dict_data`
-        4. Passing that data to the form Object (forms.py)
-            if form is valid than save that
-            if errors show that
+            1. Getting student POST data `student_data`
+            2. check for vaild JSON `valid_json`
+            3. converting to python dictonary from JSON `dict_data`
+            4. Passing that data to the form Object (forms.py)
+                if form is valid than save that
+                if errors show that
         """
         student_data = request.body # 1
         
@@ -223,3 +226,79 @@ class StudentApiView(HttpResponseMixin, SerializeMixin, View):
         if form.errors:
             json_data = json.dumps(form.errors)
             return self.render_to_http_response(json_data, status=404)
+    
+
+    """
+        Now we will perform `PUT` request
+        most of the code is already written in get and post method
+        so we will get from that ctrl c, ctl v
+    """
+
+    def put(self, request, *args, **kwargs):
+        send_data = request.body
+        valid_json = is_valid_json(send_data)
+        if not valid_json:
+            json_data = json.dumps({"message": "Invalid JSON data"})
+            return self.render_to_http_response(json_data, status=404)
+        
+        provided_dict = json.loads(send_data)
+        id = provided_dict.get('id', None)
+        
+
+        if id is not None:
+            student_data = get_object_by_id(id) # instanse
+            if student_data is None:
+                json_data = json.dumps({"message": "Requested data not available"})
+                return self.render_to_http_response(json_data, status=404)
+
+        
+        original_data = {
+            "roll_no": student_data.roll_no,
+            "name": student_data.name,
+            "address": student_data.address,
+            "registration_no": student_data.registration_no,
+        }
+        original_data.update(provided_dict)
+        form = StudentForm(original_data, instance=student_data) # never forget to pass instance else it will create new entry
+        if form.is_valid():
+            form.save()
+            json_data = json.dumps({"message": "Updated successfully"})
+            return self.render_to_http_response(json_data)
+        
+        if form.errors:
+            json_data = json.dumps(form.errors)
+            return self.render_to_http_response(json_data, status=404)
+
+
+    """
+        Now we will perform `delete` request
+    """
+
+    def delete(self, request, *args, **kwargs):
+        send_data = request.body
+        if not is_valid_json(send_data):
+            json_data = json.dumps({"message": "Invalid JSON data"})
+            return self.render_to_http_response(json_data, status=404)
+        
+        in_dict = json.loads(send_data)
+        id = in_dict.get('id', None)
+
+        if id is not None:
+            student_data = get_object_by_id(id)
+            if student_data is None:
+                json_data = json.dumps({"message": "Requested data not available, Invalid ID"})
+                return self.render_to_http_response(json_data, status=404)
+        """
+            When you delete then delete method return tuple, `(1, {'studentModel.Student': 1})`
+            which contain `status = 0 or 1`
+                0 or failed
+                1 or success
+            Second is deleted item {'studentModel.Student': 1}
+        """
+        status, deleted_item = student_data.delete()
+        if status == 1:
+            json_data = json.dumps({"message": "Deleted successfully"})
+            return self.render_to_http_response(json_data)
+
+        json_data = json.dumps({"message": "unable to delete, please cross check"})
+        return self.render_to_http_response(json_data, status=404)

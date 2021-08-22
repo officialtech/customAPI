@@ -82,9 +82,9 @@ def post_api():
     # }
     post_data = { # 3
         "roll_no": 0,
-        "name": "The monster",
-        "address": "Afganistan",
-        "registration_no": 98,
+        "name": "The Leader",
+        "address": "UAE",
+        "registration_no": 90,
     }
     # r = requests.post(BASE_URL+ENDPOINT, json.dumps(post_data)) # 1 for success test
     # r = requests.post(BASE_URL+ENDPOINT, post_data) # 2 for failure test(Invalid JSON)
@@ -92,11 +92,40 @@ def post_api():
     print(r.status_code)
     print(r.json())
 
-post_api() # 1 2 3
+# post_api() # 1 2 3
 
 """ 
 # 1
-python manage.py dumpdata employeeModel.Student --indent 4
+python manage.py dumpdata studentModel.Student --indent 4
 you can check data is successfully added by executing above command
 
 """  
+
+
+print("********************* PUT api/student-data/ *********************")
+
+def put_api(id):
+    data = {
+        "id": id,
+        "name": "Dynamo",
+        "address": "Manhatan London",
+    }
+    r = requests.put(BASE_URL+ENDPOINT, data=json.dumps(data))
+    print(r.status_code)
+    print(r.json())
+
+# put_api(111)
+
+print("********************* DELETE api/student-data/ *********************")
+
+def delete_api(id):
+    data = {
+        "id": id,
+    }
+
+    r = requests.delete(BASE_URL+ENDPOINT, data=json.dumps(data))
+    print(r.status_code)
+    print(r.json())
+
+# delete_api(3)
+# delete_api(113)
