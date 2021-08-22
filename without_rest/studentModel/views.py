@@ -245,13 +245,15 @@ class StudentApiView(HttpResponseMixin, SerializeMixin, View):
         id = provided_dict.get('id', None)
         
 
-        if id is not None:
-            student_data = get_object_by_id(id) # instanse
-            if student_data is None:
-                json_data = json.dumps({"message": "Requested data not available"})
-                return self.render_to_http_response(json_data, status=404)
+        if id is None:
+            json_data = json.dumps({"message": "ID is required to update"})
+            return self.render_to_http_response(json_data, status=404)
 
-        
+        student_data = get_object_by_id(id) # instanse
+        if student_data is None:
+            json_data = json.dumps({"message": "Requested data not available, check ID"})
+            return self.render_to_http_response(json_data, status=404)
+
         original_data = {
             "roll_no": student_data.roll_no,
             "name": student_data.name,
@@ -272,6 +274,8 @@ class StudentApiView(HttpResponseMixin, SerializeMixin, View):
 
     """
         Now we will perform `delete` request
+        as in PUT, in DELETE also we need ID to delete particular data
+
     """
 
     def delete(self, request, *args, **kwargs):
@@ -283,11 +287,14 @@ class StudentApiView(HttpResponseMixin, SerializeMixin, View):
         in_dict = json.loads(send_data)
         id = in_dict.get('id', None)
 
-        if id is not None:
-            student_data = get_object_by_id(id)
-            if student_data is None:
-                json_data = json.dumps({"message": "Requested data not available, Invalid ID"})
-                return self.render_to_http_response(json_data, status=404)
+        if id is None:
+            json_data = json.dumps({"message": "ID is required to delete"})
+            return self.render_to_http_response(json_data, status=404)
+
+        student_data = get_object_by_id(id)
+        if student_data is None:
+            json_data = json.dumps({"message": "Requested data not available, Invalid ID"})
+            return self.render_to_http_response(json_data, status=404)
         """
             When you delete then delete method return tuple, `(1, {'studentModel.Student': 1})`
             which contain `status = 0 or 1`
