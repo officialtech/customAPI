@@ -134,7 +134,7 @@ class StudentSerializePostView(HttpResponseMixin, View):
 
 """
     As of now we learnt how to develop our own custom api from scratch
-    but what `REST` or development approch says, is api should only have one `endpoint`
+    but what `REST` or development approch says, ...is api should only have one `endpoint`
     but you can see here we used many `endpoints`
     like for:
         get all students ---> `/students/`
@@ -144,11 +144,11 @@ class StudentSerializePostView(HttpResponseMixin, View):
         delete student data ---> `/student-detail/<int:id>/`
 
     As you can see we used 3 `endpoints` but we must and should have to use one
-    -------------- SO LET'S DO THAT --------------
+    -------------- SO LET'S DO IT --------------
 """
 
 
-
+@method_decorator(csrf_exempt, name="dispatch") # adding decorator to avoid CSRF 403
 class StudentApiView(HttpResponseMixin, SerializeMixin, View):
     """
         from django.views.generic import View
@@ -186,3 +186,40 @@ class StudentApiView(HttpResponseMixin, SerializeMixin, View):
         all_students_data = Student.objects.all()
         json_data = self.serialize(all_students_data) # if you have `list of objects` no need to pass list
         return self.render_to_http_response(json_data)
+
+
+    """
+        Now we will perform `post` request, so be with me, try to map all of these with real scenario
+        In POST request what we need only `data` to post nothing else
+
+        to avoid CSRF 403 error first of all add:
+            from django.utils.decorator import method_decorator
+            from dajngo.views.decorator.csrf import csrf_exempt
+            @method_decorator(csrf_exempt, name="dispatch)
+    """
+    def post(self, request, *args, **kwargs):
+        """
+        1. Getting student POST data `student_data`
+        2. check for vaild JSON `valid_json`
+        3. converting to python dictonary from JSON `dict_data`
+        4. Passing that data to the form Object (forms.py)
+            if form is valid than save that
+            if errors show that
+        """
+        student_data = request.body # 1
+        
+        valid_json = is_valid_json(student_data) # 2
+        if not valid_json:
+            json_data = json.dumps({"message": "Invalid JSON format"})
+            return self.render_to_http_response(json_data, status=404)
+        
+        dict_data = json.loads(student_data) # 3
+
+        form = StudentForm(dict_data) # 4
+        if form.is_valid():
+            form.save()
+            json_data = json.dumps({"message": "Successfully created"})
+            return self.render_to_http_response(json_data)
+        if form.errors:
+            json_data = json.dumps(form.errors)
+            return self.render_to_http_response(json_data, status=404)

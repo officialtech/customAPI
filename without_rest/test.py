@@ -47,8 +47,11 @@ def send_delete_request(id):
     print(r.status_code)
     print(r.json())
 
+###########################################################################################################
+#                                       API calls                                                         #
+###########################################################################################################
 
-print("********************* GET *********************")
+print("********************* GET api/student-data/ *********************")
 def get_api(id=None):
     data = {}
     if id is not None:
@@ -60,4 +63,40 @@ def get_api(id=None):
     print(r.status_code)
     print(r.json())
 
-get_api()
+# get_api()
+# get_api(2)
+# get_api(230)
+
+
+print("********************* POST api/student-data/ *********************")
+
+def post_api():
+    """
+        uncomment codes according to Numbers(1,2,3) and execute
+    """
+    # post_data = {
+    #     "roll_no": 123,
+    #     "name": "Boka",
+    #     "address": "Nigiria",
+    #     "registration_no": 855692,
+    # }
+    post_data = { # 3
+        "roll_no": 0,
+        "name": "The monster",
+        "address": "Afganistan",
+        "registration_no": 98,
+    }
+    # r = requests.post(BASE_URL+ENDPOINT, json.dumps(post_data)) # 1 for success test
+    # r = requests.post(BASE_URL+ENDPOINT, post_data) # 2 for failure test(Invalid JSON)
+    r = requests.post(BASE_URL+ENDPOINT, json.dumps(post_data)) # 3 for form validation test
+    print(r.status_code)
+    print(r.json())
+
+post_api() # 1 2 3
+
+""" 
+# 1
+python manage.py dumpdata employeeModel.Student --indent 4
+you can check data is successfully added by executing above command
+
+"""  
