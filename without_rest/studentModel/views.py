@@ -129,7 +129,7 @@ class StudentSerializePostView(HttpResponseMixin, View):
             return self.render_to_http_response(json_data)
 
 
-
+######################################################## API ########################################################
 
 
 """
@@ -156,6 +156,8 @@ class StudentApiView(HttpResponseMixin, SerializeMixin, View):
     """
         from django.views.generic import View
     """
+######################################################## GET ########################################################
+
     def get(self, request, *args, **kwargs):
         """
             1. Store send data `student_data`
@@ -200,6 +202,8 @@ class StudentApiView(HttpResponseMixin, SerializeMixin, View):
             from dajngo.views.decorator.csrf import csrf_exempt
             @method_decorator(csrf_exempt, name="dispatch)
     """
+######################################################## POST ########################################################
+
     def post(self, request, *args, **kwargs):
         """
             1. Getting student POST data `student_data`
@@ -233,6 +237,7 @@ class StudentApiView(HttpResponseMixin, SerializeMixin, View):
         most of the code is already written in get and post method
         so we will get from that ctrl c, ctl v
     """
+######################################################## PUT ########################################################
 
     def put(self, request, *args, **kwargs):
         send_data = request.body
@@ -277,6 +282,7 @@ class StudentApiView(HttpResponseMixin, SerializeMixin, View):
         as in PUT, in DELETE also we need ID to delete particular data
 
     """
+######################################################## DELETE ########################################################
 
     def delete(self, request, *args, **kwargs):
         send_data = request.body
