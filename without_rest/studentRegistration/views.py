@@ -41,6 +41,11 @@ class StudentApi(View):
         
         all_student = Student.objects.all()
         json_data = serialize('json', all_student)
+        p_dict = json.loads(json_data)
+        final_list=[]
+        for _ in p_dict:
+            final_list.append(_['fields'])
+        json_data=json.dumps(final_list)
         return HttpResponse(json_data, content_type="application/json", status=200)
 
 
